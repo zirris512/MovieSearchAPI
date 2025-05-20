@@ -1,4 +1,3 @@
-using System;
 using Microsoft.OpenApi.Models;
 using Azure.Security.KeyVault.Secrets;
 using Azure.Identity;
