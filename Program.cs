@@ -1,11 +1,21 @@
+using System;
 using Microsoft.OpenApi.Models;
+using Azure.Security.KeyVault.Secrets;
+using Azure.Identity;
 using MovieSearch.Controller;
 
 
 var builder = WebApplication.CreateBuilder(args);
-var movieApiKey = builder.Configuration["Movies:ApiKey"]!;
 
-var Client = new QueryClient(movieApiKey);
+string keyVaultName = Environment.GetEnvironmentVariable("VAULT_NAME")!;
+var kvUri = "https://" + keyVaultName + ".vault.azure.net";
+
+var client = new SecretClient(new Uri(kvUri), new DefaultAzureCredential());
+
+
+var secret = client.GetSecret(Environment.GetEnvironmentVariable("SECRET_NAME"));
+
+var Client = new QueryClient(secret.Value.Value);
 
 builder.Services.AddSwaggerGen(c =>
   {
@@ -23,11 +33,6 @@ if (app.Environment.IsDevelopment())
          c.SwaggerEndpoint("/swagger/v1/swagger.json", "Movie Search API V1");
      });
 }
-else if (app.Environment.IsProduction())
-{
-    Client = new QueryClient(movieApiKey);
-}
-
 
 app.MapGet("/movie", (string query) => Client.GetMovieTitles("movie", query));
 app.MapGet("/tv", (string query) => Client.GetTvTitles("tv", query));
