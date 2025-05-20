@@ -6,7 +6,7 @@ using MovieSearch.Controller;
 
 var builder = WebApplication.CreateBuilder(args);
 
-string keyVaultName = Environment.GetEnvironmentVariable("VAULT_NAME")!;
+string? keyVaultName = Environment.GetEnvironmentVariable("VAULT_NAME");
 var kvUri = "https://" + keyVaultName + ".vault.azure.net";
 
 var client = new SecretClient(new Uri(kvUri), new DefaultAzureCredential());
@@ -33,8 +33,8 @@ if (app.Environment.IsDevelopment())
      });
 }
 
-app.MapGet("/movie", (string query) => Client.GetMovieTitles("movie", query));
-app.MapGet("/tv", (string query) => Client.GetTvTitles("tv", query));
-app.MapGet("/person", (string query) => Client.GetPersonTitles("person", query));
+app.MapGet("/movie", (string? query) => Client.GetMovieTitles("movie", query));
+app.MapGet("/tv", (string? query) => Client.GetTvTitles("tv", query));
+app.MapGet("/person", (string? query) => Client.GetPersonTitles("person", query));
 
 app.Run();

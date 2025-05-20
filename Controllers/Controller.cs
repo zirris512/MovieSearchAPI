@@ -20,11 +20,11 @@ public class QueryClient
         _client.AddDefaultHeaders(headers);
     }
 
-    public async Task<ApiResult<ResponseMovieData>> GetMovieTitles(string queryType, string query)
+    public async Task<ApiResult<ResponseMovieData>> GetMovieTitles(string queryType, string? query)
     {
-        if (query is null)
+        if (string.IsNullOrWhiteSpace(query))
         {
-            return new ApiResult<ResponseMovieData>() { Data = { } };
+            return new ApiResult<ResponseMovieData>() { ErrorMessage = "No query provided!" };
         }
         var request = new RestRequest(queryType);
         request.AddParameter("query", query);
@@ -46,11 +46,11 @@ public class QueryClient
             return new ApiResult<ResponseMovieData>() { ErrorMessage = error.Message };
         }
     }
-    public async Task<ApiResult<ResponseTvData>> GetTvTitles(string queryType, string query)
+    public async Task<ApiResult<ResponseTvData>> GetTvTitles(string queryType, string? query)
     {
-        if (query is null)
+        if (string.IsNullOrWhiteSpace(query))
         {
-            return new ApiResult<ResponseTvData>() { Data = { } };
+            return new ApiResult<ResponseTvData>() { ErrorMessage = "No query provided!" };
         }
         var request = new RestRequest(queryType);
         request.AddParameter("query", query);
@@ -72,11 +72,11 @@ public class QueryClient
             return new ApiResult<ResponseTvData>() { ErrorMessage = error.Message };
         }
     }
-    public async Task<ApiResult<ResponsePersonData>> GetPersonTitles(string queryType, string query)
+    public async Task<ApiResult<ResponsePersonData>> GetPersonTitles(string queryType, string? query)
     {
-        if (query is null)
+        if (string.IsNullOrWhiteSpace(query))
         {
-            return new ApiResult<ResponsePersonData>() { Data = { } };
+            return new ApiResult<ResponsePersonData>() { ErrorMessage = "No query provided!" };
         }
         var request = new RestRequest(queryType);
         request.AddParameter("query", query);
@@ -97,11 +97,5 @@ public class QueryClient
         {
             return new ApiResult<ResponsePersonData>() { ErrorMessage = error.Message };
         }
-    }
-
-    private string GetImageLink(string url)
-    {
-        const string BASE_LINK = "https://image.tmdb.org/t/p/original";
-        return BASE_LINK + url;
     }
 }
