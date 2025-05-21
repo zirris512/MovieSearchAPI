@@ -6,6 +6,16 @@ using MovieSearch.Controller;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+    });
+});
+
 string? keyVaultName = Environment.GetEnvironmentVariable("VAULT_NAME");
 var kvUri = "https://" + keyVaultName + ".vault.azure.net";
 
@@ -23,6 +33,8 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
+
+app.UseCors("CorsPolicy");
 
 if (app.Environment.IsDevelopment())
 {
